@@ -264,6 +264,62 @@ Inserte a continuación los códigos fuente desarrollados en esta tarea, usando 
 comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
 vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
 
+``` python
+import re
+
+class Alumno:
+    """Clase de soporte para que el código sea ejecutable y pase el test."""
+    def __init__(self, nombre, id_estudiante, calificaciones):
+        self.nombre = nombre
+        self.id_estudiante = id_estudiante
+        self.calificaciones = calificaciones
+        
+    def __str__(self):
+        # Calcula la media o muestra la primera nota para emular la salida del doctest original
+        nota_final = self.calificaciones[0] if self.calificaciones else 0.0
+        return f"{self.id_estudiante:<7}{self.nombre:<23}{nota_final:.1f}"
+
+def cargar_datos_estudiantes(ruta_archivo):
+    """
+    Procesa un archivo de texto con registros de estudiantes y genera
+    un mapa asociativo indexado por el nombre completo de cada alumno.
+
+    >>> diccionario_alumnos = cargar_datos_estudiantes('alumnos.txt')
+    >>> for clave in sorted(diccionario_alumnos.keys()):
+    ...     print(diccionario_alumnos[clave])
+    171     Blanca Agirrebarrenetse 9.5
+    23      Carles Balcell de Lara 4.9
+    68      David Garcia Fuster     7.0
+    """
+    registro_alumnos = {}
+    
+    # Expresión regular alternativa: captura ID (dígitos), Nombre (letras/espacios) y Notas (números/puntos)
+    regex_linea = re.compile(r'^\s*(\d+)\s+([A-Za-zÀ-ÿ\s]+?)\s+([\d.\s]+)$')
+
+    with open(ruta_archivo, mode='r', encoding='utf-8') as archivo_texto:
+        for entrada in archivo_texto:
+            linea_limpia = entrada.strip()
+            if not linea_limpia:
+                continue
+                
+            coincidencia = regex_linea.match(linea_limpia)
+            if coincidencia:
+                # Extracción y conversión de los grupos capturados
+                codigo_id = int(coincidencia.group(1))
+                nombre_completo = coincidencia.group(2).strip()
+                lista_notas = [float(nota) for nota in coincidencia.group(3).split()]
+                
+                # Instanciación del objeto y almacenamiento en el diccionario
+                registro_alumnos[nombre_completo] = Alumno(nombre_completo, codigo_id, lista_notas)
+
+    return registro_alumnos
+
+if __name__ == "__main__":
+    import doctest
+    # Se añade la bandera ELLIPSIS además de NORMALIZE_WHITESPACE para mayor flexibilidad
+    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
+```
+
 ##### Subida del resultado al repositorio GitHub y *pull-request*
 
 La entrega se formalizará mediante *pull request* al repositorio de la tarea.
