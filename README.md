@@ -257,6 +257,8 @@ funcionamiento de su función.
 Inserte a continuación una captura de pantalla que muestre el resultado de ejecutar el
 fichero `alumno.py` con la opción *verbosa*, de manera que se muestre el
 resultado de la ejecución de los tests unitarios.
+<img width="863" height="453" alt="doctest" src="https://github.com/user-attachments/assets/9aea997e-0f58-4db6-997d-fe43e07f8249" />
+
 
 ##### Código desarrollado
 
